@@ -16,7 +16,7 @@ describe("Utilities", () => {
 
     describe("loadSpecification", () => {
         it("should fail if unable to load specification", () => {
-            return utilities.loadSpecification("test/some-unknown-specification.json")
+            return utilities.loadSpecification("test/specifications/some-unknown-specification.json")
                 .then(() => Promise.reject("Expected to fail"))
                 .catch((error: Error) => {
                     error.message.should.include("no such file");
@@ -24,7 +24,7 @@ describe("Utilities", () => {
         });
 
         it("should return the specification", () => {
-            return utilities.loadSpecification("test/some-specification.json")
+            return utilities.loadSpecification("test/specifications/some-specification.json")
                 .then(specification => {
                     specification.should.deep.equal([{
                         method: "GET",
