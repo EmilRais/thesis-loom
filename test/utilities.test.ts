@@ -2,12 +2,17 @@ import * as chai from "chai";
 const should = chai.should();
 
 import { RequestHandler } from "express";
+import * as mockito from "ts-mockito";
 
 import { Operation, Specification } from "../source/specification.model";
 import { Utilities } from "../source/utilities";
 
 describe("Utilities", () => {
-    const utilities = new Utilities();
+    let utilities: Utilities;
+
+    beforeEach(() => {
+        utilities = new Utilities();
+    });
 
     describe("loadSpecification", () => {
         it("should fail if unable to load specification", () => {
@@ -31,7 +36,34 @@ describe("Utilities", () => {
     });
 
     describe("convertSpecificationToImplementation", () => {
-        it("should convert operations for each endpoint");
+        it("should convert operations for each endpoint", () => {
+            const specification: Specification = [
+                {
+                    method: "GET",
+                    path: "/ping",
+                    operations: [
+                        { module: "some-module" } as Operation
+                    ]
+                }
+            ];
+
+            const utilitiesSpy = mockito.spy(utilities);
+
+            const someOperation = function() {};
+            mockito.when(utilitiesSpy.convertOperations(mockito.anything()))
+                .thenReturn(Promise.resolve([someOperation]));
+
+            return utilities.convertSpecificationToImplementation(specification)
+                .then(implementation => {
+                    implementation.should.deep.equal([
+                        {
+                            method: "GET",
+                            path: "/ping",
+                            operations: [someOperation]
+                        }
+                    ]);
+                });
+        });
     });
 
     describe("convertOperations", () => {
