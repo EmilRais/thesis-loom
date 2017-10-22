@@ -1,4 +1,4 @@
-import * as express from "express";
+import { ErrorRequestHandler, RequestHandler } from "express";
 
 export type Implementation = Endpoint[];
 
@@ -8,4 +8,4 @@ export interface Endpoint {
     operations: Operation[];
 }
 
-export type Operation = express.RequestHandler | express.ErrorRequestHandler;
+export type Operation = RequestHandler | ErrorRequestHandler;

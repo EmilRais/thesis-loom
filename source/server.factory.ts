@@ -1,9 +1,10 @@
+import { Express } from "express";
 import * as express from "express";
 
 import { Implementation } from "./implementation.model";
 
 export class ServerFactory {
-    createServer(implementation: Implementation): express.Express {
+    createServer(implementation: Implementation): Express {
         const server = express();
 
         implementation.forEach(endpoint => {

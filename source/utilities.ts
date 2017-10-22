@@ -37,7 +37,8 @@ export class Utilities {
 
     convertOperations(operations: AbstractOperation[]): Promise<Operation[]> {
         return Promise.all(operations.map(operation => {
-            const module = require(operation.module) as Module;
+            const modulePath = resolvePath(operation.module);
+            const module = require(modulePath) as Module;
             return module.prepareOperation(operation);
         }));
     }

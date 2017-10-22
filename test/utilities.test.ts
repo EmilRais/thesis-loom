@@ -1,7 +1,9 @@
 import * as chai from "chai";
 const should = chai.should();
 
-import { Specification } from "../source/specification.model";
+import { RequestHandler } from "express";
+
+import { Operation, Specification } from "../source/specification.model";
 import { Utilities } from "../source/utilities";
 
 describe("Utilities", () => {
@@ -33,6 +35,22 @@ describe("Utilities", () => {
     });
 
     describe("convertOperations", () => {
-        it("should load and prepare operations");
+        it("should load and prepare operations", () => {
+            const operations: Operation[] = [
+                { module: "test/modules/name", name: "Peter" } as Operation,
+                { module: "test/modules/age", age: 21 } as Operation
+            ];
+
+            return utilities.convertOperations(operations)
+                .then((concreteOperations: RequestHandler[]) => {
+                    concreteOperations.should.have.length(2);
+                    concreteOperations[0](null, null, name => {
+                        concreteOperations[1](null, null, age => {
+                            name.should.equal("Peter");
+                            age.should.equal(21);
+                        });
+                    });
+                });
+        });
     });
 });
