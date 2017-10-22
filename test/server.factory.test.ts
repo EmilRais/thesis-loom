@@ -61,5 +61,38 @@ describe("ServerFactory", () => {
                 });
             });
         });
+
+        it("should create endpoints that are only available at specified method and path", () => {
+            const implementation: Implementation = [
+                {
+                    method: "GET",
+                    path: "/ping",
+                    operations: [
+                        function(request, response, next) {
+                            response.locals.value = "some-value";
+                            next();
+                        },
+                        function(request, response, next) {
+                            response.status(200).end(response.locals.value);
+                        }
+                    ] as RequestHandler[]
+                }
+            ];
+
+            return new Promise((resolve, reject) => {
+                serverFactory.createServer(implementation).listen(3030, function() {
+                    const runningServer: Server = this;
+                    agent.post("localhost:3030/ping")
+                        .catch(error => error.response)
+                        .then(response => {
+                            runningServer.close();
+                            response.status.should.equal(404);
+                            response.text.should.include("Cannot POST /ping");
+                            resolve();
+                        })
+                        .catch(reject);
+                });
+            });
+        });
     });
 });
