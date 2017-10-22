@@ -9,7 +9,7 @@ const specificationPath = parameters[0];
 io.loadSpecification(specificationPath)
     .then(specification => {
         return SpecificationRule().guard(specification)
-            .then(() => console.log(JSON.stringify(specification, null, 4)))
+            .then(() => console.log(JSON.stringify(specification, null, 4)));
     })
     .catch(error => {
         console.error(error);

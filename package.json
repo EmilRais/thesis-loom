@@ -4,6 +4,7 @@
   "description": "",
   "main": "build/source/main.js",
   "scripts": {
+    "lint": "tslint 'source/**/*.ts' 'test/**/*.ts'",
     "clean": "rm -rf build",
     "prebuild": "npm run clean",
     "build": "tsc",
