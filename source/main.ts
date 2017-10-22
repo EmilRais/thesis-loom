@@ -1,6 +1,10 @@
+import { Server } from "http";
+
+import { ServerFactory } from "./server.factory";
 import { SpecificationRule } from "./specification.rule";
 import { Utilities } from "./utilities";
 
+const serverFactory = new ServerFactory();
 const utilities = new Utilities();
 
 const parameters = process.argv.slice(2);
@@ -12,7 +16,13 @@ if ( !specificationPath )
 utilities.loadSpecification(specificationPath)
     .then(specification => SpecificationRule().guard(specification))
     .then(specification => utilities.convertSpecificationToImplementation(specification))
-    .then(implementation => console.log(JSON.stringify(implementation, null, 4)))
+    .then(implementation => serverFactory.createServer(implementation))
+    .then(server => {
+        server.listen(3000, function() {
+            const port = (this as Server).address().port;
+            console.log(`Listening on port ${port}`);
+        });
+    })
     .catch(error => {
         console.error(error);
         process.exit(1);
