@@ -3,7 +3,7 @@
         "method": "GET",
         "path": "/ping",
         "operations": [
-            { "module": "test/modules/response", "status": 200, "text": "pong" }
+            { "module": "../modules/response", "status": 200, "text": "pong" }
         ]
     }
 ]

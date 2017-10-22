@@ -1,5 +1,5 @@
 import * as fs from "fs";
-import { resolve as resolvePath } from "path";
+import { dirname, resolve as resolvePath } from "path";
 
 import { Implementation, Operation } from "./implementation.model";
 import { Operation as AbstractOperation, Specification } from "./specification.model";
@@ -22,9 +22,9 @@ export class Utilities {
         });
     }
 
-    convertSpecificationToImplementation(specification: Specification): Promise<Implementation> {
+    convertSpecificationToImplementation(path: string, specification: Specification): Promise<Implementation> {
         return Promise.all(specification.map(endpoint => {
-            return this.convertOperations(endpoint.operations)
+            return this.convertOperations(path, endpoint.operations)
                 .then(operations => {
                     return {
                         method: endpoint.method,
@@ -35,9 +35,10 @@ export class Utilities {
         }));
     }
 
-    convertOperations(operations: AbstractOperation[]): Promise<Operation[]> {
+    convertOperations(path: string, operations: AbstractOperation[]): Promise<Operation[]> {
         return Promise.all(operations.map(operation => {
-            const modulePath = resolvePath(operation.module);
+            const context = dirname(path);
+            const modulePath = resolvePath(context, operation.module);
             const module = require(modulePath) as Module;
             return module.prepareOperation(operation);
         }));

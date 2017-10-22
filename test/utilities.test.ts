@@ -50,10 +50,10 @@ describe("Utilities", () => {
             const utilitiesSpy = mockito.spy(utilities);
 
             const someOperation = function() {};
-            mockito.when(utilitiesSpy.convertOperations(mockito.anything()))
+            mockito.when(utilitiesSpy.convertOperations("some-path", mockito.anything()))
                 .thenReturn(Promise.resolve([someOperation]));
 
-            return utilities.convertSpecificationToImplementation(specification)
+            return utilities.convertSpecificationToImplementation("some-path", specification)
                 .then(implementation => {
                     implementation.should.deep.equal([
                         {
@@ -69,11 +69,11 @@ describe("Utilities", () => {
     describe("convertOperations", () => {
         it("should load and prepare operations", () => {
             const operations: Operation[] = [
-                { module: "test/modules/name", name: "Peter" } as Operation,
-                { module: "test/modules/age", age: 21 } as Operation
+                { module: "../modules/name", name: "Peter" } as Operation,
+                { module: "../modules/age", age: 21 } as Operation
             ];
 
-            return utilities.convertOperations(operations)
+            return utilities.convertOperations("test/specifications/empty-specification.json", operations)
                 .then((concreteOperations: RequestHandler[]) => {
                     concreteOperations.should.have.length(2);
                     concreteOperations[0](null, null, name => {
