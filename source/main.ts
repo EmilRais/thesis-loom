@@ -6,9 +6,13 @@ const utilities = new Utilities();
 const parameters = process.argv.slice(2);
 const specificationPath = parameters[0];
 
+if ( !specificationPath )
+    throw new Error("Please specify path to the REST specification");
+
 utilities.loadSpecification(specificationPath)
     .then(specification => SpecificationRule().guard(specification))
-    .then(specification => console.log(JSON.stringify(specification, null, 4)))
+    .then(specification => utilities.convertSpecificationToImplementation(specification))
+    .then(implementation => console.log(JSON.stringify(implementation, null, 4)))
     .catch(error => {
         console.error(error);
         process.exit(1);

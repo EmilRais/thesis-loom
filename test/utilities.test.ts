@@ -27,4 +27,12 @@ describe("Utilities", () => {
                 });
         });
     });
+
+    describe("convertSpecificationToImplementation", () => {
+        it("should convert operations for each endpoint");
+    });
+
+    describe("convertOperations", () => {
+        it("should load and prepare operations");
+    });
 });
