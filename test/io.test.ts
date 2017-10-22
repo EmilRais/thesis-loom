@@ -2,6 +2,7 @@ import * as chai from "chai";
 const should = chai.should();
 
 import { IO } from "../source/io";
+import { Specification } from "../source/specification.model";
 
 describe("IO", () => {
     let io: IO;
@@ -22,7 +23,11 @@ describe("IO", () => {
         it("should return the specification", () => {
             return io.loadSpecification("test/some-specification.json")
                 .then(specification => {
-                    specification.should.deep.equal([]);
+                    specification.should.deep.equal([{
+                        method: "GET",
+                        path: "/ping",
+                        operations: []
+                    }] as Specification);
                 });
         });
     });

@@ -1,1 +1,5 @@
-[]
+[{
+    "method": "GET",
+    "path": "/ping",
+    "operations": []
+}]
