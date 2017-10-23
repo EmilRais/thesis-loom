@@ -35,7 +35,7 @@ describe("Utilities", () => {
         });
     });
 
-    describe("convertSpecificationToImplementation", () => {
+    describe("convertSpecificationToDesign", () => {
         it("should convert operations for each endpoint", () => {
             const specification: Specification = [
                 {
@@ -53,9 +53,9 @@ describe("Utilities", () => {
             mockito.when(utilitiesSpy.convertOperations("some-path", mockito.anything()))
                 .thenReturn(Promise.resolve([someOperation]));
 
-            return utilities.convertSpecificationToImplementation("some-path", specification)
+            return utilities.convertSpecificationToDesign("some-path", specification)
                 .then(implementation => {
-                    implementation.should.deep.equal([
+                    implementation.endpoints.should.deep.equal([
                         {
                             method: "GET",
                             path: "/ping",

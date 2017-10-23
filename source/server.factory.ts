@@ -1,13 +1,13 @@
 import { Express } from "express";
 import * as express from "express";
 
-import { Implementation } from "./implementation.model";
+import { Design } from "./design.model";
 
 export class ServerFactory {
-    createServer(implementation: Implementation): Express {
+    createServer(design: Design): Express {
         const server = express();
 
-        implementation.forEach(endpoint => {
+        design.endpoints.forEach(endpoint => {
             switch ( endpoint.method ) {
                 case "GET": return server.get(endpoint.path, endpoint.operations);
                 case "POST": return server.post(endpoint.path, endpoint.operations);

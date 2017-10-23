@@ -15,7 +15,7 @@ if ( !specificationPath )
 
 utilities.loadSpecification(specificationPath)
     .then(specification => SpecificationRule().guard(specification))
-    .then(specification => utilities.convertSpecificationToImplementation(specificationPath, specification))
+    .then(specification => utilities.convertSpecificationToDesign(specificationPath, specification))
     .then(implementation => serverFactory.createServer(implementation))
     .then(server => {
         server.listen(3000, function() {

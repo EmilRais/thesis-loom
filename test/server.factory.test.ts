@@ -5,7 +5,7 @@ import { RequestHandler } from "express";
 import { Server } from "http";
 import * as agent from "superagent";
 
-import { Implementation } from "../source/implementation.model";
+import { Design } from "../source/design.model";
 import { ServerFactory } from "../source/server.factory";
 
 describe("ServerFactory", () => {
@@ -13,16 +13,16 @@ describe("ServerFactory", () => {
 
     describe("createServer", () => {
         it("should fail if unknown method", () => {
-            const implementation: Implementation = [
-                {
+            const design: Design = {
+                endpoints: [{
                     method: "get",
                     path: "/ping",
                     operations: []
-                }
-            ];
+                }]
+            };
 
             try {
-                serverFactory.createServer(implementation);
+                serverFactory.createServer(design);
                 throw new Error("Was supposed to fail");
             } catch (error) {
                 error.message.should.equal("Unrecognised method for endpoint get /ping");
@@ -30,8 +30,8 @@ describe("ServerFactory", () => {
         });
 
         it("should create endpoints that perform operations", () => {
-            const implementation: Implementation = [
-                {
+            const design: Design = {
+                endpoints: [{
                     method: "GET",
                     path: "/ping",
                     operations: [
@@ -43,11 +43,11 @@ describe("ServerFactory", () => {
                             response.status(200).end(response.locals.value);
                         }
                     ] as RequestHandler[]
-                }
-            ];
+                }]
+            };
 
             return new Promise((resolve, reject) => {
-                serverFactory.createServer(implementation).listen(3030, function() {
+                serverFactory.createServer(design).listen(3030, function() {
                     const runningServer: Server = this;
                     agent.get("localhost:3030/ping")
                         .catch(error => error.response)
@@ -63,8 +63,8 @@ describe("ServerFactory", () => {
         });
 
         it("should create endpoints that are only available at specified method and path", () => {
-            const implementation: Implementation = [
-                {
+            const design: Design = {
+                endpoints: [{
                     method: "GET",
                     path: "/ping",
                     operations: [
@@ -76,11 +76,11 @@ describe("ServerFactory", () => {
                             response.status(200).end(response.locals.value);
                         }
                     ] as RequestHandler[]
-                }
-            ];
+                }]
+            };
 
             return new Promise((resolve, reject) => {
-                serverFactory.createServer(implementation).listen(3030, function() {
+                serverFactory.createServer(design).listen(3030, function() {
                     const runningServer: Server = this;
                     agent.post("localhost:3030/ping")
                         .catch(error => error.response)

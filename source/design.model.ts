@@ -1,6 +1,8 @@
 import { ErrorRequestHandler, RequestHandler } from "express";
 
-export type Implementation = Endpoint[];
+export interface Design {
+    endpoints: Endpoint[];
+}
 
 export interface Endpoint {
     method: string;

@@ -1,7 +1,7 @@
 import * as fs from "fs";
 import { dirname, resolve as resolvePath } from "path";
 
-import { Implementation, Operation } from "./implementation.model";
+import { Design, Operation } from "./design.model";
 import { Operation as AbstractOperation, Specification } from "./specification.model";
 
 interface Module {
@@ -22,7 +22,7 @@ export class Utilities {
         });
     }
 
-    convertSpecificationToImplementation(path: string, specification: Specification): Promise<Implementation> {
+    convertSpecificationToDesign(path: string, specification: Specification): Promise<Design> {
         return Promise.all(specification.map(endpoint => {
             return this.convertOperations(path, endpoint.operations)
                 .then(operations => {
@@ -32,7 +32,8 @@ export class Utilities {
                         operations: operations
                     };
                 });
-        }));
+        }))
+            .then(endpoints => ({ endpoints: endpoints }));
     }
 
     convertOperations(path: string, operations: AbstractOperation[]): Promise<Operation[]> {
