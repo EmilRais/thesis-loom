@@ -4,36 +4,38 @@ const should = chai.should();
 import { EndpointRule, OperationRule, SpecificationRule } from "../source/specification.rule";
 
 describe("SpecificationRule", () => {
-    it("should fail if missing", () => {
-        return SpecificationRule().guard(null)
+    it("should fail if endpoints are missing", () => {
+        return SpecificationRule().guard({ endpoints: null })
             .then(() => Promise.reject("Should have failed"))
             .catch(error => {
-                error.should.deep.equal(['"$" was missing']);
+                error.should.deep.equal(['"$.endpoints" was missing']);
             });
     });
 
-    it("should fail if not an array", () => {
-        return SpecificationRule().guard(42)
+    it("should fail if endpoints are not an array", () => {
+        return SpecificationRule().guard({ endpoints: 42 })
             .then(() => Promise.reject("Should have failed"))
             .catch(error => {
-                error.should.deep.equal(['"$" was not an array']);
+                error.should.deep.equal(['"$.endpoints" was not an array']);
             });
     });
 
-    it("should fail if not an array of endpoints", () => {
-        return SpecificationRule().guard([null])
+    it("should fail if endpoints is not an array of endpoints", () => {
+        return SpecificationRule().guard({ endpoints: [null] })
             .then(() => Promise.reject("Should have failed"))
             .catch(error => {
-                error.should.deep.equal(['"$[0]" was missing']);
+                error.should.deep.equal(['"$.endpoints[0]" was missing']);
             });
     });
 
     it("should succeed if an array of endpoints", () => {
-        return SpecificationRule().guard([{
-            method: "GET",
-            path: "/ping",
-            operations: []
-        }]);
+        return SpecificationRule().guard({
+            endpoints: [{
+                method: "GET",
+                path: "/ping",
+                operations: []
+            }]
+        });
     });
 });
 

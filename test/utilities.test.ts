@@ -26,34 +26,38 @@ describe("Utilities", () => {
         it("should return the specification", () => {
             return utilities.loadSpecification("test/specifications/empty-specification.json")
                 .then(specification => {
-                    specification.should.deep.equal([{
-                        method: "GET",
-                        path: "/ping",
-                        operations: []
-                    }] as Specification);
+                    specification.should.deep.equal({
+                        location: "test/specifications/empty-specification.json",
+                        endpoints: [{
+                            method: "GET",
+                            path: "/ping",
+                            operations: []
+                        }]
+                    } as Specification);
                 });
         });
     });
 
     describe("convertSpecificationToDesign", () => {
         it("should convert operations for each endpoint", () => {
-            const specification: Specification = [
-                {
+            const specification: Specification = {
+                location: "some-path",
+                endpoints: [{
                     method: "GET",
                     path: "/ping",
                     operations: [
                         { module: "some-module" } as Operation
                     ]
-                }
-            ];
+                }]
+            };
 
             const utilitiesSpy = mockito.spy(utilities);
 
             const someOperation = function() {};
-            mockito.when(utilitiesSpy.convertOperations("some-path", mockito.anything()))
+            mockito.when(utilitiesSpy.prepareOperations("some-path", mockito.anything()))
                 .thenReturn(Promise.resolve([someOperation]));
 
-            return utilities.convertSpecificationToDesign("some-path", specification)
+            return utilities.convertSpecificationToDesign(specification)
                 .then(implementation => {
                     implementation.endpoints.should.deep.equal([
                         {
@@ -66,14 +70,14 @@ describe("Utilities", () => {
         });
     });
 
-    describe("convertOperations", () => {
+    describe("prepareOperations", () => {
         it("should load and prepare operations", () => {
             const operations: Operation[] = [
                 { module: "../modules/name", name: "Peter" } as Operation,
                 { module: "../modules/age", age: 21 } as Operation
             ];
 
-            return utilities.convertOperations("test/specifications/empty-specification.json", operations)
+            return utilities.prepareOperations("test/specifications/empty-specification.json", operations)
                 .then((concreteOperations: RequestHandler[]) => {
                     concreteOperations.should.have.length(2);
                     concreteOperations[0](null, null, name => {

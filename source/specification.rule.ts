@@ -20,6 +20,7 @@ export const EndpointRule = () => All([
 ]);
 
 export const SpecificationRule = () => All([
-    Required(),
-    Array([EndpointRule()])
+    MandatoryFields({
+        endpoints: [Required(), Array([EndpointRule()])]
+    })
 ]);

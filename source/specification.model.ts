@@ -1,4 +1,7 @@
-export type Specification = Endpoint[];
+export interface Specification {
+    location: string;
+    endpoints: Endpoint[];
+}
 
 export interface Endpoint {
     method: string;
