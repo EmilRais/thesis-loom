@@ -1,3 +1,4 @@
+import { json } from "body-parser";
 import { Express } from "express";
 import * as express from "express";
 
@@ -6,6 +7,8 @@ import { Design } from "./design.model";
 export class ServerFactory {
     createServer(design: Design): Express {
         const server = express();
+
+        server.use(json());
 
         design.endpoints.forEach(endpoint => {
             switch ( endpoint.method ) {
