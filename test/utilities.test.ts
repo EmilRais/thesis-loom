@@ -74,16 +74,20 @@ describe("Utilities", () => {
         it("should load and prepare operations", () => {
             const operations: Operation[] = [
                 { module: "../modules/name", name: "Peter" } as Operation,
-                { module: "../modules/age", age: 21 } as Operation
+                { module: "../modules/age", age: 21 } as Operation,
+                { module: "../modules/context" } as Operation
             ];
 
             return utilities.prepareOperations("test/specifications/empty-specification.json", operations)
                 .then((concreteOperations: RequestHandler[]) => {
-                    concreteOperations.should.have.length(2);
+                    concreteOperations.should.have.length(3);
                     concreteOperations[0](null, null, name => {
                         concreteOperations[1](null, null, age => {
-                            name.should.equal("Peter");
-                            age.should.equal(21);
+                            concreteOperations[2](null, null, context => {
+                                name.should.equal("Peter");
+                                age.should.equal(21);
+                                context.should.equal("test/specifications");
+                            });
                         });
                     });
                 });

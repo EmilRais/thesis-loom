@@ -5,7 +5,7 @@ import { Design, Operation } from "./design.model";
 import { Endpoint, Operation as AbstractOperation, Specification } from "./specification.model";
 
 interface Module {
-    prepareOperation(operation: AbstractOperation): Promise<Operation>;
+    prepareOperation(operation: AbstractOperation, context: string): Promise<Operation>;
 }
 type ModuleConstructor = (operation: AbstractOperation) => Promise<Operation>;
 
@@ -41,7 +41,7 @@ export class Utilities {
             const context = dirname(path);
             const modulePath = resolvePath(context, operation.module);
             const module = require(modulePath) as Module;
-            return module.prepareOperation(operation);
+            return module.prepareOperation(operation, context);
         }));
     }
 }
