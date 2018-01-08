@@ -12,7 +12,7 @@
     "start": "node .",
     "pretest": "npm run build",
     "test": "mocha build/test",
-    "package": "npm run build && docker build . -t emilrais/speciale-tool"
+    "package": "npm run build && docker build . -t emilrais/thesis-loom"
   },
   "author": "Emil Rais",
   "license": "UNLICENSED",
